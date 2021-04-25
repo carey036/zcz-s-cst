@@ -135,9 +135,9 @@
             var outer=document.createElement("div");
             if(type==1 || type==3){//单选或者判断
                 outer.innerHTML="<p>"+(id+1)+". "+question+"&nbsp;&nbsp;<lable class=answer style=display:none id="+type+id+">"+answer+"</lable>"+"</p>"+"<p>"+options.replace(/A./,"<input type=radio name="+type+id+" value=A>A.").replace(/B./,"<input type=radio name="+type+id+" value=B>B.").replace(/C./,"<input type=radio name="+type+id+" value=C>C.").replace(/D./,"<input type=radio name="+type+id+" value=D>D.")+"</p><hr>";
-            }else{//多選
+            }else{//多選 type=2
                 //outer.innerText="dddd"
-                outer.innerHTML= "<p>"+(id+1)+". "+question+"&nbsp;&nbsp;<lable class=answer style=display:none>"+answer+"</lable>"+"</p>"+"<p>"+options.replace(/A./,"<input type=checkbox name="+type+id+" value=A>A.").replace(/B./,"<input type=checkbox name="+type+id+" value=B>B.").replace(/C./,"<input type=checkbox name="+type+id+" value=C>C.").replace(/D./,"<input type=checkbox name="+type+id+" value=D>D.").replace(/E./,"<input type=checkbox name="+type+id+" value=E>E.")+"</p><hr>";
+                outer.innerHTML= "<p>"+(id+1)+". "+question+"&nbsp;&nbsp;<lable class=answer style=display:none id="+type+id+">"+answer+"</lable>"+"</p>"+"<p>"+options.replace(/A./,"<input type=checkbox name="+type+id+" value=A>A.").replace(/B./,"<input type=checkbox name="+type+id+" value=B>B.").replace(/C./,"<input type=checkbox name="+type+id+" value=C>C.").replace(/D./,"<input type=checkbox name="+type+id+" value=D>D.").replace(/E./,"<input type=checkbox name="+type+id+" value=E>E.")+"</p><hr>";
             }
             //console.log("test");
             //alert("写入");
@@ -151,17 +151,33 @@
             while (i < lables.length){
                 lables[i].style.display=null;
                 //console.log(lables[i].id)
+                duoxuanList = []
                 elements = document.getElementsByName(lables[i].id)
                 Array.prototype.forEach.call(elements, function (element) {
-                    if(element.checked && element.value==lables[i].innerHTML){//只能判断单选题以及判断题是否正确
-                        lables[i].style.color="green";
-                        window.key["cj"]+=1
+                    if(lables[i].id.slice(0,1)=="2"){
+                        //多选
+                        if(element.checked){
+                            duoxuanList.push(element.value)
+                        }
+                    }else{
+                        if(element.checked && element.value==lables[i].innerHTML){//只能判断单选题以及判断题是否正确
+                            lables[i].style.color="green";
+                            window.key["cj"]+=1
+                        }
                     }
                 });
-                console.log(lables[i].innerHTML)
+                if(lables[i].id.slice(0,1)=="2"){
+                    // console.log(duoxuanList)
+                    if(duoxuanList.sort().toString() == lables[i].innerHTML){
+                        //答题正确
+                        lables[i].style.color="green";
+                        window.key["cj"]+=2
+                    }
+                }
+                // console.log(lables[i].innerHTML)
                 i=i+1;
             }
-            alert("答题完毕，得分为"+window.key["cj"]+"(不包括多选)")
+            alert("答题完毕，得分为"+window.key["cj"]+"(仅参考)")
         }
     </script>
     
